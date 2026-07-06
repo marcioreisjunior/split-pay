@@ -1,0 +1,16 @@
+# Segredos em qualquer pasta
+.env
+*.env
+backend/.env
+
+
+venv/
+backend/venv/
+__pycache__/
+*.pyc
+
+
+node_modules/
+frontend/node_modules/
+dist/
+build/
