@@ -64,7 +64,6 @@ def criar_cartao(cartao: CriarCartao):
         cursor.close()
         conexao.close()
         
-
         return cartao_criado
     except Exception as erro:
         return {"Erro ao criar cartao: ": str(erro)}

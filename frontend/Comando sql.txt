@@ -1,0 +1,12 @@
+SELECT 
+  f.id,
+  MAX(data_vcto) as data_fatura,
+  SUM(CASE WHEN a.id_perfil = 1 THEN valor_atribuido ELSE 0 END) as valor_usuario_total,
+  SUM(CASE WHEN a.id_perfil != 1 THEN valor_atribuido ELSE 0 END) as valor_terceiro_total,
+  SUM(valor_atribuido) AS valor_total
+FROM parcela p 
+INNER JOIN atribuicao a ON (p.id = a.id_parcela)
+RIGHT JOIN fatura f ON (f.id = p.id_fatura)
+  WHERE id_cartao = 1
+GROUP BY f.id
+order by data_fatura
