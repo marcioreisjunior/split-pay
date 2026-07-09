@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import './ResumoFaturas.css'
 import ModalLancarFaturas from "./components/modalLancarFatura.jsx";
+import FaturaCompleta from "./FaturaCompleta.jsx";
 
 
 const usuario = 1
@@ -14,7 +15,8 @@ function statusFatura(dataFatura){
 const urlBaseAPI = "http://localhost:8000"
 
 function ResumoFaturas({ cartao, aoVoltar }) {
-  const [modalAberto, setModalAberto] = useState(false) 
+  const [modalAberto, setModalAberto] = useState(false)
+  const [detalheFaturaAberto, setDetalheFatura] = useState(null)
   const [faturas, setFaturas] = useState([])
   useEffect(() => {
     const buscarFatura = async () =>{
@@ -96,6 +98,13 @@ function ResumoFaturas({ cartao, aoVoltar }) {
 
   return (
     <>
+      {detalheFaturaAberto ? (
+        <FaturaCompleta
+          fatura = {detalheFaturaAberto}
+          aoVoltar ={() => setDetalheFatura(null)}
+        />
+      ) : (
+      
     <div className="resumo-container">
       
       {/* CABEÇALHO DA PÁGINA */}
@@ -144,7 +153,7 @@ function ResumoFaturas({ cartao, aoVoltar }) {
               <tr 
               key={fatura.id}
               className={`linha-fatura status-${fatura.status.toLowerCase()}`}
-              onClick={() => AbrirDetalhesFatura(fatura)}
+              onClick={() => setDetalheFatura(fatura)}
               >
                 <td className="destaque-mes">{fatura.mes_referencia}</td>
                 <td>{fatura.dia_vencimento}</td>
@@ -160,8 +169,8 @@ function ResumoFaturas({ cartao, aoVoltar }) {
           </tbody>
         </table>
       </div>
-
     </div>
+    )}
     {modalAberto && (
         <ModalLancarFaturas
           aoFechar={() => setModalAberto(false)} 
@@ -169,7 +178,9 @@ function ResumoFaturas({ cartao, aoVoltar }) {
         />
       )}
   </>
-  );
+    
+  )
+;
 }
 
 export default ResumoFaturas;

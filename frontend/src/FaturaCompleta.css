@@ -1,0 +1,117 @@
+.fatura-conteiner {
+  width: 90%;
+  max-width: 1100px;
+  margin: 20px auto;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+.fatura-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.fatura-titulo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-deletar-fatura {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-deletar-fatura:disabled {
+  background: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn-lancar-compra-unica {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Faz a mudança de cor ser suave */
+}
+
+.btn-lancar-compra-unica:hover {
+  background: #296d9b;
+}
+
+.btn-lancar-compra-multipla {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Faz a mudança de cor ser suave */
+}
+
+.btn-lancar-compra-multipla:hover {
+  background: #296d9b;
+}
+
+.divisor {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin-bottom: 25px;
+}
+
+.tabela-responsiva {
+  overflow-x: auto;
+}
+
+.tabela-fatura-completa {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.tabela-fatura-completa th {
+  background-color: #2c3e50;
+  padding: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  border-bottom: 2px solid #ddd;
+}
+
+.tabela-fatura-completa td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.linha-fatura-completa {
+  cursor: pointer;
+  transition: transform 0.1s, filter 0.2s;
+}
+
+.linha-fatura-completa:hover {
+  filter: brightness(0.94); 
+  transform: scale(0.998); 
+  background-color: #f9f9f9; 
+}
+
+.tabela-fatura-completa tr:hover {
+  background-color: #fcfcfc;
+}

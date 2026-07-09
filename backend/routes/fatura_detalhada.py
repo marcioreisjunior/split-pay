@@ -25,13 +25,18 @@ def listar_fatura_detalhada(fatura: int):
         conexao = psycopg2.connect(URL_DO_BANCO)
         cursor = conexao.cursor(cursor_factory=RealDictCursor)
         comando_sql =  """SELECT
-                c.descricao, p.valor_parc, a.valor_atribuido, pe.nome AS responsavel, p.numero_parc, a.id
-            FROM parcela p 
-            INNER JOIN atribuicao a ON (p.id = a.id_parcela)
-            INNER JOIN compra c ON (c.id = p.id_compra)
-            INNER JOIN perfil pe ON (pe.id = a.id_perfil)
-            WHERE p.id_fatura = %(id_fatura)s
-            ORDER BY a.id"""
+                    COALESCE(c.descricao, 'Sem descrição') AS descricao,
+                    COALESCE(p.valor_parc, 0.0) AS valor_parc,
+                    COALESCE(a.valor_atribuido, 0.0) AS valor_atribuido,
+                    COALESCE(pe.nome, 'Não atribuído') AS responsavel,
+                    COALESCE(p.numero_parc, 1) AS numero_parc,
+                    COALESCE(a.id, 0) AS id
+                FROM parcela p 
+                LEFT JOIN compra c ON (c.id = p.id_compra)
+                LEFT JOIN atribuicao a ON (p.id = a.id_parcela)
+                LEFT JOIN perfil pe ON (pe.id = a.id_perfil)
+                WHERE p.id_fatura = %(id_fatura)s
+                ORDER BY a.id, p.id;"""
         
         valor = { "id_fatura" : fatura }
 

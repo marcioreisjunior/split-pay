@@ -65,6 +65,10 @@ background-color: #007bff;
   transition: background-color 0.3s; /* Faz a mudança de cor ser suave */
 }
 
+.btn-lancar-fatura:hover {
+  background: #296d9b; 
+}
+
 .divisor {
   border: 0;
   border-top: 1px solid #eee;
@@ -174,20 +178,6 @@ background-color: #007bff;
   color: #721c24;
 }
 
-.btn-detalhes {
-  background: transparent;
-  border: 1px solid #007bff;
-  color: #007bff;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-detalhes:hover {
-  background: #007bff;
-  color: white;
-}
 
 .coluna-status {
   text-transform: uppercase;
