@@ -3,43 +3,36 @@ import './ResumoFaturas.css'
 import ModalLancarFaturas from "./components/modalLancarFatura.jsx";
 
 
-const urlBaseAPI = "http://localhost:8000"
-
-function dataLimpa(data) {
-  
-
-  const dataVctoSegura = String(data);
-  const [ano, mes, dia] = dataVctoSegura.split('-');
-
-  return {
-    diaMes: `${dia}/${mes}`,
-    mesAno: `${mes}/${ano}`
-  }
-
+const usuario = 1
+function statusFatura(dataFatura){
+  const hojeTexto = new Date().toLocaleDateString("en-CA");
+  if (dataFatura > hojeTexto) {
+    return "Aberta"
+  } else return "Atrasada"
 
 }
+const urlBaseAPI = "http://localhost:8000"
+
 function ResumoFaturas({ cartao, aoVoltar }) {
   const [modalAberto, setModalAberto] = useState(false) 
   const [faturas, setFaturas] = useState([])
   useEffect(() => {
     const buscarFatura = async () =>{
       try {
-        const resposta = await fetch(`${urlBaseAPI}/faturas?id_cartao=${cartao.id}`);
+        const resposta = await fetch(`${urlBaseAPI}/resumofatura?usuario=${usuario}&cartao=${cartao.id}`);
         if (resposta.ok) {
           const dadosDoBanco = await resposta.json()
 
-          const faturaParaTela = dadosDoBanco.map(faturaAPI => {
-            const {diaMes, mesAno} = dataLimpa(faturaAPI.data_vcto);
-
-            return{
+          const faturaParaTela = dadosDoBanco.map(faturaAPI => ({
+            
               id: faturaAPI.id,
-              mes_referencia: mesAno,
-              dia_vencimento: diaMes,
-              valor_usuario: faturaAPI.valor_total,
-              valor_terceiros: faturaAPI.valor_total,
+              mes_referencia:  faturaAPI.mes_referencia,
+              dia_vencimento:  faturaAPI.dia_vencimento,
+              valor_usuario: faturaAPI.valor_usuario_total,
+              valor_terceiros: faturaAPI.valor_terceiro_total,
               valor_total:faturaAPI.valor_total,
               status: faturaAPI.status
-            }});
+            }));
 
             setFaturas(faturaParaTela);
         }
@@ -52,9 +45,6 @@ function ResumoFaturas({ cartao, aoVoltar }) {
 
   }, [])
 
-  
-
-  // Truque de Sênior: Função para formatar qualquer número para R$ 0,00
   const formatarMoeda = (valor) => {
     const numeroSeguro = Number(valor) || 0;
     return numeroSeguro.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -66,7 +56,7 @@ function ResumoFaturas({ cartao, aoVoltar }) {
       id: Number(Date.now()),
       data_vcto: dataVctoForm,
       valor_pago: 0,
-      status: "aberta",
+      status: statusFatura(dataVctoForm),
       id_cartao: cartao.id
     };
     try {
@@ -86,7 +76,7 @@ function ResumoFaturas({ cartao, aoVoltar }) {
         const faturaPronta = {
           id:faturaCriadaNoBanco.id,
           mes_referencia: (mes && ano) ? `${mes}/${ano}` : dataVctoSegura,
-          dia_vencimento: (dia && mes) ? `${dia}/${mes}` : dataVctoSegura,
+          dia_vencimento: (dia) ? `${dia}` : dataVctoSegura,
           valor_usuario: 0.00,
           valor_terceiros: 0.00,
           valor_total:0.00,
