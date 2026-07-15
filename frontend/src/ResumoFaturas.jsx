@@ -53,7 +53,6 @@ function ResumoFaturas({ cartao, aoVoltar }) {
   };
 
   const lancarFatura = async (dataVctoForm) => {
-    console.log(cartao)
     const novaFatura = {
       id: Number(Date.now()),
       data_vcto: dataVctoForm,

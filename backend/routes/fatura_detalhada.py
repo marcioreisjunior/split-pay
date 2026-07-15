@@ -36,7 +36,7 @@ def listar_fatura_detalhada(fatura: int):
                 LEFT JOIN atribuicao a ON (p.id = a.id_parcela)
                 LEFT JOIN perfil pe ON (pe.id = a.id_perfil)
                 WHERE p.id_fatura = %(id_fatura)s
-                ORDER BY a.id, p.id;"""
+                ORDER BY p.id, a.id;"""
         
         valor = { "id_fatura" : fatura }
 

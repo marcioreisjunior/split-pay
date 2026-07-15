@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
 import "./FaturaCompleta.css";
 import { use } from "react";
+import ModalLancarFaturas from "./components/modalLancarFatura";
+import ModalLancarCompraUnica from "./components/ModalLancarCompraUnica";
 
 const urlBaseAPI = "http://localhost:8000";
+
+
 
 function FaturaCompleta({ fatura, aoVoltar }) {
   const [compras, setCompras] = useState([]);
   const [detalheCompras, setDetalheCompras] = useState(null)
+  const [modalUnicoAberto, setModalUnicoAberto] = useState(false);
+  const [modalMultiploAberto, setModalMultiploAberto] = useState(false);
   useEffect(() => {
     const buscarCompras = async () => {
       try {
@@ -43,6 +49,40 @@ function FaturaCompleta({ fatura, aoVoltar }) {
   };
 
   const temCompras = compras.length > 0;
+
+  const lancarCompraUnica = async (compraUnicaForm) => {
+    const novaCompra = {
+      idFatura: fatura.id,
+      valorTotal: Number(compraUnicaForm.valorTotal),
+      descricao: compraUnicaForm.descricao,
+      data: compraUnicaForm.data,
+      quantidadeParcela: Number(compraUnicaForm.quantidadeParcela),
+      valorParc: Number(compraUnicaForm.valorParc),
+
+    };//fim da novaCompra
+    try{
+      const resposta = await fetch(`urlBaseAPI/faturadetalhada`, {
+        method: 'POST',
+        Headers: {
+          'content-type': 'application/json'},
+        body: JSON.stringify(novaCompra)
+      })
+      if (resposta.ok) {
+        const compraCriadaNoBanco = await resposta.json();
+
+        const compraUnicaPronta = {
+          ...compraCriadaNoBanco,
+          valorParc: compraCriadaNoBanco.valor_parc,
+          numeroParc: compraCriadaNoBanco.numero_parc,
+          valorAtribuido: compraCriadaNoBanco.valor_atribuido
+        };
+        setCompras([...compras, compraUnicaPronta])
+        setModalUnicoAberto(false)
+      }
+    } catch (erro) { //Fim try
+      console.error("Erro ao enviar a fatura na API: ", erro)
+    }
+}//fim da função lancar compra unica
 
   return (
     <>
@@ -100,7 +140,7 @@ function FaturaCompleta({ fatura, aoVoltar }) {
                     className="linha-fatura-completa"
                     onClick={() => setDetalheCompra(compras)}
                     >
-                        <td className="fatura-descricao">{compras.descricao}</td>
+                        <td className="fatura-descricao">{`${compras.descricao} (${compras.numeroParc})`}</td>
                         <td className="fatura-responsavel">{compras.responsavel}</td>
                         <td className="fatura-valorParcela">{formatarMoeda(compras.valorParc)}</td>
                         <td className="fatura-valorAtribuido">{formatarMoeda(compras.valorAtribuido)}</td>
@@ -110,8 +150,16 @@ function FaturaCompleta({ fatura, aoVoltar }) {
           </table>
         </div>
       </div>
+    {modalUnicoAberto && (
+      <ModalLancarCompraUnica
+      aoFechar={() => setModalUnicoAberto(false)}
+      aoSalvar={lancarCompraUnica}
+      />)}
     </>
   );
-} //fim da função resumo faturas
+} //fim da função Fatura faturas
+
+
+
 
 export default FaturaCompleta;
